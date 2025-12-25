@@ -1,0 +1,66 @@
+-- CTE's 
+
+#A CTE (Common Table Expression) in SQL is a temporary, named result set that you can use inside a SELECT, INSERT, UPDATE, or DELETE query.
+
+with cte_eg as
+(
+select gender , avg(salary) as avg_sal , max(salary) as max_sal , min(salary) as min_sal, count(salary) as count_sal
+from employee_demographics as demo
+join employee_salary as sal
+    on demo.employee_id = sal.employee_id
+group by gender     
+)
+select  avg(avg_sal)
+from cte_eg ;
+
+--------------- Selecting mutipul Table with CTE --
+ 
+ with cte_eg1 as 
+ (
+ select employee_id , gender , birth_date
+ from employee_demographics as demo
+ where birth_date > '1985-01-01'
+ ),
+ cte_eg2 as 
+ (
+select employee_id, salary
+from employee_salary 
+where salary > 50000
+ )
+ select * 
+ from cte_eg1
+ join cte_eg2
+    on cte_eg1.employee_id = cte_eg2.employee_id ;
+    ----
+with ct1 as 
+(
+select employee_id,gender, birth_date
+from employee_demographics 
+where birth_date > '1985.01.01'
+ ),
+ ct2 as 
+ (
+ select salary , employee_id
+ from employee_salary 
+ where salary > 40000
+ )
+ select *
+ from ct1
+ join ct2 using (employee_id);
+ 
+    
+    
+    
+    -- An another way to keep the heading easly ...
+    
+    with cte_eg (GENDER , AVG_SALARY, MAX_SAL , MIN_SAL, COUNT_SAL) as
+(
+select gender , avg(salary), max(salary) , min(salary), count(salary) 
+from employee_demographics as demo
+join employee_salary as sal
+    on demo.employee_id = sal.employee_id
+group by gender     
+)
+select  *
+from cte_eg ;
+ 
